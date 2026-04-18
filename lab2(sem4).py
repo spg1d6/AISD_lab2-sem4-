@@ -7,10 +7,6 @@ import heapq
 from collections import defaultdict
 import struct
 
-# =========================
-# BIT HELPERS (НОВЫЕ)
-# =========================
-
 def bits_to_bytes(bitstring):
     padding = 8 - len(bitstring) % 8 if len(bitstring) % 8 != 0 else 0
     bitstring += "0" * padding
@@ -26,10 +22,6 @@ def bytes_to_bits(data, padding):
     if padding:
         return bitstring[:-padding]
     return bitstring
-
-# =========================
-# HUFFMAN (ПОЧИНЕН)
-# =========================
 
 class HuffmanNode:
     def __init__(self, value=None, freq=0, left=None, right=None):
@@ -90,10 +82,6 @@ def decode_huffman(data_bytes, table, padding):
             cur = ""
     return res
 
-# =========================
-# BLOCKS
-# =========================
-
 def split_blocks(ch, size=8):
     h, w = ch.shape
     pad_h = (size - h % size) % size
@@ -117,10 +105,6 @@ def merge_blocks(blocks, shape, size=8):
             k += 1
     return img
 
-# =========================
-# DCT
-# =========================
-
 def create_dct(N=8):
     C = np.zeros((N, N))
     for i in range(N):
@@ -132,10 +116,6 @@ def create_dct(N=8):
 
 def dct2(b, C): return C.T @ b @ C
 def idct2(b, C): return C @ b @ C.T
-
-# =========================
-# QUANT
-# =========================
 
 QY = np.array([
  [16,11,10,16,24,40,51,61],
@@ -165,10 +145,6 @@ def scale_q(Q, q):
     Qn = np.floor((Q*S + 50)/100)
     Qn[Qn == 0] = 1
     return Qn
-
-# =========================
-# (остальной код без изменений)
-# =========================
 
 def zigzag(b):
     res = []
@@ -261,10 +237,6 @@ def upsample(ch, shape):
     up = np.repeat(np.repeat(ch,2,0),2,1)
     return up[:shape[0], :shape[1]]
 
-# =========================
-# COMPRESS / DECOMPRESS
-# =========================
-
 def compress(img, q):
     C = create_dct()
     orig_shape = img.shape[:2]
@@ -351,10 +323,6 @@ def decompress(data):
     h, w = data["orig_shape"]
     return rgb[:h, :w]
 
-# =========================
-# RAW + RUN + GRAPH
-# =========================
-
 def save_custom_raw(image_path, raw_path):
     img = np.array(Image.open(image_path).convert("RGB"), dtype=np.uint8)
     h, w = img.shape[:2]
@@ -385,7 +353,6 @@ def run(image_path):
         restored = decompress(data)
         restored = np.clip(restored, 0, 255).astype(np.uint8)
 
-        # 👉 out_path ВСЕГДА создаётся
         out_path = os.path.join("results", f"out_q{q}.png")
 
         img_pil = Image.fromarray(restored, mode="RGB")
@@ -406,4 +373,4 @@ def run(image_path):
 #run(r"D:\Users\User\Desktop\тоэ\bm1v8ul3ob191.png")
 #run(r"D:\Users\User\Desktop\тоэ\gray.png")
 #run(r"D:\Users\User\Desktop\тоэ\bw.png")
-run(r"D:\Users\User\Desktop\тоэ\bwdizer.png")
+#run(r"D:\Users\User\Desktop\тоэ\bwdizer.png")
